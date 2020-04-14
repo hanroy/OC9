@@ -14,7 +14,8 @@ else
   # sauvegarde des donnees de la base de donn�e
   mysqldump -v -u root -pubuntu --all-databases --master-data | gzip > "/root/backup/"wordpress-$(date +"%d-%m-%Y")"/BddBackup.$(date +"%Y-%m-%d").sql.gz"
   # sauvegarde des donnees wordpress
-  tar -v -cpPzf "/root/backup/"wordpress-$(date +"%d-%m-%Y")"/WordpressBackup.$(date +"%Y-%m-%d").tar.gz" /var/www/html
+  cd /var/www/html/
+  tar -v -cpPzf "/root/backup/"wordpress-$(date +"%d-%m-%Y")"/WordpressBackup.$(date +"%Y-%m-%d").tar.gz" wordpress/
 
   # lftp
 

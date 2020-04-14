@@ -86,7 +86,7 @@ chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R
 
 echo "configuration wordpress"
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.pha
+chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
 chmod 755 /usr/local/bin/wp
 cd /var/www/html/wordpress/
@@ -108,5 +108,5 @@ echo $i
 URL="--url=http://${i}/wordpress"
 echo $URL
 
-wp core install $URL --title="wordpress" --admin_user=admin --admin_email=royer.hanen@gmail.com --admin_password=ubuntu
+wp core install $URL --title="wordpress"  --title="wordpress" --admin_user=admin --admin_email=royer.hanen@gmail.com --admin_password=ubuntu
 #wp core install --url=http:///${i}/wordpress --title="wordpress" --admin_user=admin --admin_email=royer.hanen@gmail.com --admin_password=ubuntu
