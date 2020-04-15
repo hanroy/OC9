@@ -1,4 +1,4 @@
-set +x
+#!/bin/bash
 
 # supprimer les vieilles sauvegarde de plus de 5 jours
 find /root/backup/* -type d -mtime +1 -exec rm -rdf {} \;
@@ -23,13 +23,12 @@ else
 ftpsite="192.168.141.142"
 ftpuser="wordpress"
 ftppass="ubuntu"
-#remote folder in which you want to delete files
 putdir="/home/wordpress/"
 nullfolder="/tmp/null"
 
 ndays=5
 
-mkdir -p nullfolder
+mkdir -p $nullfolder
 
 lftp -u $ftpuser,$ftppass $ftpsite <<-EOF
 mirror $putdir $nullfolder --older-than=now-${ndays}days --Remove-source-files;

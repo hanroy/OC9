@@ -1,5 +1,9 @@
+#!/bin/bash
+
+set -e 
+
 # LOG
-#exec &> /var/log/backup-$(date +"%d-%m-%Y").log
+exec | tee /var/log/backup-$(date +"%d-%m-%Y").log
 
 # change hostname
 hostnamectl set-hostname webserver
