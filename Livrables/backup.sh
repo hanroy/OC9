@@ -78,35 +78,24 @@ mysql -u root -pubuntu -e "FLUSH PRIVILEGES;"
 sleep 5
 
 echo "Telecharger et extraire wordpress"
-curl https://wordpress.org/latest.tar.gz --output wordpress.tar.gz
-tar xf wordpress.tar.gz
-cp -r wordpress /var/www/html
-chown -R apache:apache /var/www/html/wordpress
-chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R
+
+lftp -u  wordpress,ubuntu 192.168.141.142 -e "set ssl:verify-certificate no; mirror --verbose --use-pget-n=8 -c --verbose  /home/wordpress/"wordpress-$(date +"%d-%m-%Y")" /root/ ; bye"
 
 echo "configuration wordpress"
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp
 chmod 755 /usr/local/bin/wp
-cd /var/www/html/wordpress/
 
-wp core config --dbname=wordpress --dbuser=admin --dbpass=ubuntu --extra-php <<PHP
-define('AUTOSAVE_INTERVAL', 300 );
-define('WP_POST_REVISIONS', false );
-define( 'WP_AUTO_UPDATE_CORE', true );
-define( 'WP_DEBUG', false );
-PHP
-
-# pour eviter l'erreur (postdrop: warning: unable to look up public/pickup: No such file or directory)
-mkfifo /var/spool/postfix/public/pickup
-service postfix restart
+mkdir -p /var/www/html/wordpress
+chown -R apache:apache /var/www/html/wordpress
+cd /var/www/html/wordpress
+wp core download
+wp core config --dbname=wordpress --dbuser=admin --dbpass=ubuntu
+wp db import /root/wordpress-$(date +"%d-%m-%Y")/BddBackup.$(date +"%Y-%m-%d").sql
 
 i=$(ip  -f inet a show ens33| grep inet| awk '{ print $2}' | cut -d/ -f1)
 echo $i
 
-URL="--url=http://${i}/wordpress"
-echo $URL
+wp search-replace "http://192.168.141.139/wordpress" "http://${i}/wordpress"
 
-wp core install $URL --title="wordpress"  --title="wordpress" --admin_user=admin --admin_email=royer.hanen@gmail.com --admin_password=ubuntu
-#wp core install --url=http:///${i}/wordpress --title="wordpress" --admin_user=admin --admin_email=royer.hanen@gmail.com --admin_password=ubuntu

@@ -9,10 +9,11 @@ if [ -d "/root/backup/"wordpress-$(date +"%d-%m-%Y")"" ]; then
   echo "bye"
 else
 
-  # creer le dissuer du backup
+  # creer le dossier du backup
   mkdir -v /root/backup/"wordpress-$(date +"%d-%m-%Y")"
-  # sauvegarde des donnees de la base de donn�e
-  mysqldump -v -u root -pubuntu --all-databases --master-data | gzip > "/root/backup/"wordpress-$(date +"%d-%m-%Y")"/BddBackup.$(date +"%Y-%m-%d").sql.gz"
+  # sauvegarde des donnees de la base de donnee
+  cd /var/www/html/wordpress 
+  wp db export /root/backup/"wordpress-$(date +"%d-%m-%Y")"/BddBackup.$(date +"%Y-%m-%d").sql
   # sauvegarde des donnees wordpress
   cd /var/www/html/
   tar -v -cpPzf "/root/backup/"wordpress-$(date +"%d-%m-%Y")"/WordpressBackup.$(date +"%Y-%m-%d").tar.gz" wordpress/
